@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    >
+
+    <!-- Form fields -->
+    <LinearLayout 
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="10dp">
+
+        <EditText
+            android:id="@+id/inpNameArticle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="Name"
+            android:inputType="textPersonName" />
+    
+        <EditText
+            android:id="@+id/inpDetailsArticle"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="20dp"
+            android:hint="Details"
+            android:inputType="textMultiLine" />
+
+        <Spinner
+            android:id="@+id/spnCategories"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="25dp"
+            />
+
+        <!-- ImageView for displaying the selected image -->
+        <!--<ImageView
+            android:id="@+id/imgArticle"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_gravity="center"
+            android:layout_marginTop="20dp"
+            android:background="#E0E0E0"
+            android:scaleType="centerCrop" />-->
+
+<!--        <ImageView
+            android:id="@+id/imgArticle"
+            android:layout_width="200dp"
+            android:layout_height="200dp"
+            android:layout_marginTop="20dp"
+            android:src="@drawable/ic_launcher_foreground"
+            android:scaleType="centerCrop"
+            android:background="#E0E0E0"
+            android:layout_gravity="center" />-->
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:orientation="vertical"
+            android:layout_margin="16dp">
+
+            <ImageView
+                android:id="@+id/imgArticle"
+                android:layout_width="200dp"
+                android:layout_height="200dp"
+                android:src="@drawable/ic_launcher_foreground"
+                android:scaleType="centerCrop"
+                android:background="#E0E0E0"
+                android:contentDescription="Article Image" />
+
+            <TextView
+                android:id="@+id/txtDeleteImage"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Delete image"
+                android:textColor="@android:color/holo_blue_light"
+                android:layout_marginTop="16dp"
+                android:textStyle="bold"
+                android:clickable="true"
+                android:focusable="true"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:layout_gravity="center_horizontal|bottom"
+                android:padding="8dp" />
+        </LinearLayout>
+    </LinearLayout>
+
+    <!-- White spacing -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:padding="16dp"/>
+
+    <!-- Botom buttons panel -->
+    <LinearLayout
+        android:id="@+id/llAcceptCancelButtons"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:padding="10dp"
+        >
+
+        <!-- Botón Aceptar -->
+        <Button
+            android:id="@+id/btnAceptar"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:text="@string/action_accept_create_article"
+            android:layout_weight="1"
+            android:layout_marginEnd="8dp" />
+
+        <!-- Botón Cancelar -->
+        <Button
+            android:id="@+id/btnCancelar"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="1"
+            android:text="@string/action_cancel_create_article" />
+
+    </LinearLayout>
+</LinearLayout>
+

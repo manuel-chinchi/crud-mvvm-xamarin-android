@@ -1,0 +1,28 @@
+<resources>
+    <string name="app_name">crud_xamarin</string>
+    <string name="action_settings">Settings</string>
+  <!--activity_main.xml-->
+    <string name="title_main">Menu</string>
+    <string name="action_articles">Articles</string>
+    <string name="action_categories">Categories</string>
+  <!--activity_article.xml-->
+  <string name="col_id_article">ID</string>
+  <string name="col_name_article">Name</string>
+  <string name="col_details_article">Details</string>
+  <string name="action_add_article">Add</string>
+  <string name="action_edit_article">Edit</string>
+  <string name="action_delete_article">Delete</string>
+  <string name="action_more_article">More</string>
+  <!--activity_create_article.xml-->
+  <string name="action_accept_create_article">Accept</string>
+  <string name="action_cancel_create_article">Cancel</string>
+  <string name="message_success_article_created">Item successfully added!</string>
+  <string name="message_warning_article_delete">Are you sure you want to delete the selected items?</string>
+  <!--activity_category.xml-->
+  <string name="message_delete_category">Are you sure you want to delete the selected categories?</string>
+  <string name="message_warning_delete_category">Some categories have linked articles, if you delete them, those articles will be left uncategorized. Do you want to continue?</string>
+
+  <string name="title_delete">Delete</string>
+  <string name="title_warning">Warning</string>
+  <string name="message_cancel">Canceled action</string>
+</resources>
