@@ -123,9 +123,9 @@
     <PackageReference Include="Xamarin.Essentials" Version="1.6.1" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\crud-xamarin-android.Core\crud-xamarin-android.Core.csproj">
+    <ProjectReference Include="..\crud-mvvm-xamarin-android.Backend\crud-mvvm-xamarin-android.Backend.csproj">
       <Project>{d0e0f415-d276-44e6-a781-f3837deccd23}</Project>
-      <Name>crud-xamarin-android.Core</Name>
+      <Name>crud-mvvm-xamarin-android.Backend</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup>
