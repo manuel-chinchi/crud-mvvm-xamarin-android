@@ -13,7 +13,7 @@
         android:background="#CCCCCC">
 
         <CheckBox
-            android:id="@+id/chkSelectAllCategories"
+            android:id="@+id/cbSelectAll_Categories"
             android:foreground="@drawable/border_item_header"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -63,7 +63,7 @@
 
     <!--Rendering item_category.xml layout-->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/lstCategories" 
+        android:id="@+id/rvCategories_Categories" 
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -79,7 +79,7 @@
         android:padding="10dp">
 
         <Button
-            android:id="@+id/btnAddCategory"
+            android:id="@+id/btnAdd_Categories"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginEnd="4dp"
@@ -88,7 +88,7 @@
             android:text="Add" />
 
         <Button
-            android:id="@+id/btnDeleteCategory"
+            android:id="@+id/btnDelete_Categories"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginStart="4dp"
@@ -98,7 +98,7 @@
             android:text="Delete" />
 
         <Button
-            android:id="@+id/btnMoreOptCategory"
+            android:id="@+id/btnMore_Categories"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginStart="4dp"

@@ -17,7 +17,7 @@ using System.Text;
 namespace crud_mvvm_xamarin_android.Frontend.Activities
 {
     [Activity(Label = "Categories")]
-    public class CategoryActivity : AppCompatActivity
+    public class CategoriesActivity : AppCompatActivity
     {
         Button btnAdd, btnDelete;
         CheckBox chkSelectAll;
@@ -26,7 +26,7 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
         CategoryAdapter adapter;
         CategoryService categoryService;
 
-        public CategoryActivity()
+        public CategoriesActivity()
         {
             categoryService = new CategoryService();
             adapter = new CategoryAdapter(categoryService.GetCategories().ToList());
@@ -41,18 +41,18 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetHomeButtonEnabled(true);
 
-            recyclerView = FindViewById<RecyclerView>(Resource.Id.lstCategories);
+            recyclerView = FindViewById<RecyclerView>(Resource.Id.rvCategories_Categories);
             recyclerView.SetLayoutManager(new LinearLayoutManager(this));
             recyclerView.SetAdapter(adapter);
 
-            btnAdd = FindViewById<Button>(Resource.Id.btnAddCategory);
+            btnAdd = FindViewById<Button>(Resource.Id.btnAdd_Categories);
             btnAdd.Click += BtnAddCategory_Click;
 
-            btnDelete = FindViewById<Button>(Resource.Id.btnDeleteCategory);
+            btnDelete = FindViewById<Button>(Resource.Id.btnDelete_Categories);
             btnDelete.Enabled = false;
             btnDelete.Click += BtnDeleteCategory_Click;
 
-            chkSelectAll = FindViewById<CheckBox>(Resource.Id.chkSelectAllCategories);
+            chkSelectAll = FindViewById<CheckBox>(Resource.Id.cbSelectAll_Categories);
             chkSelectAll.CheckedChange += ChkSelectAllCategories_CheckedChange;
         }
 

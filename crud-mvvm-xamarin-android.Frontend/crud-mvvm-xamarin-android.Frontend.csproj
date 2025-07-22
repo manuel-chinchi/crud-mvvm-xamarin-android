@@ -69,8 +69,8 @@
   <ItemGroup>
     <Compile Include="Adapters\ArticleAdapter.cs" />
     <Compile Include="Adapters\CategoryAdapter.cs" />
-    <Compile Include="Activities\ArticleActivity.cs" />
-    <Compile Include="Activities\CategoryActivity.cs" />
+    <Compile Include="Activities\ArticlesActivity.cs" />
+    <Compile Include="Activities\CategoriesActivity.cs" />
     <Compile Include="Activities\CreateArticleActivity.cs" />
     <Compile Include="Activities\CreateCategoryActivity.cs" />
     <Compile Include="Decorations\GridItemDecoration.cs" />

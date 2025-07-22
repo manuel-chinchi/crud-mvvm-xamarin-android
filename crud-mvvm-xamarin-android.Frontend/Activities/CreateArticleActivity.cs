@@ -49,20 +49,20 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetHomeButtonEnabled(true);
 
-            btnAccept = FindViewById<Button>(Resource.Id.btnAceptar);
+            btnAccept = FindViewById<Button>(Resource.Id.btnAccept_CreateArticle);
             btnAccept.Click += BtnAccept_Click;
 
-            btnCancel = FindViewById<Button>(Resource.Id.btnCancelar);
+            btnCancel = FindViewById<Button>(Resource.Id.btnCancel_CreateArticle);
             btnCancel.Click += BtnCancel_Click;
 
-            imgArticle = FindViewById<ImageView>(Resource.Id.imgArticle);
+            imgArticle = FindViewById<ImageView>(Resource.Id.imgImage_CreateArticle);
             imgArticle.Click += ImgArticle_Click;
 
-            txtDeleteImage = FindViewById<TextView>(Resource.Id.txtDeleteImage);
+            txtDeleteImage = FindViewById<TextView>(Resource.Id.txtDeleteImage_CreateArticle);
             txtDeleteImage.Visibility = ViewStates.Gone;
             txtDeleteImage.Click += TxtDeleteImage_Click;
 
-            spnCategories = FindViewById<Spinner>(Resource.Id.spnCategories);
+            spnCategories = FindViewById<Spinner>(Resource.Id.spnCategory_CreateArticle);
             var categories = categoryService.GetCategories().OrderBy(c=>c.Name).ToList();
             List<string> spnDataSource;
             ArrayAdapter spnAdapter;
@@ -175,8 +175,8 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
             toast.SetGravity(GravityFlags.Top | GravityFlags.CenterHorizontal, 0, 0);
             toast.Show();
 
-            var inpNameArt = FindViewById<EditText>(Resource.Id.inpNameArticle);
-            var inpDetailsArt = FindViewById<EditText>(Resource.Id.inpDetailsArticle);
+            var inpNameArt = FindViewById<EditText>(Resource.Id.etName_CreateArticle);
+            var inpDetailsArt = FindViewById<EditText>(Resource.Id.etDetails_CreateArticle);
 
             var article = new Article
             {

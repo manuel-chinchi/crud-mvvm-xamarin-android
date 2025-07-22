@@ -22,7 +22,7 @@
         android:background="#CCCCCC">
 
         <CheckBox
-            android:id="@+id/chkSelectAllItems"
+            android:id="@+id/cbSelectAll_Articles"
             android:foreground="@drawable/border_item_header"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
@@ -83,7 +83,7 @@
 
     <!--Rendering item_article.xml layout-->
     <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/lstArticles" 
+        android:id="@+id/rvArticles_Articles" 
         android:layout_width="match_parent"
         android:layout_height="0dp"
         android:layout_weight="1"
@@ -99,7 +99,7 @@
         android:padding="10dp">
 
         <Button
-            android:id="@+id/btnAgregar"
+            android:id="@+id/btnAdd_Articles"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginEnd="4dp"
@@ -108,7 +108,7 @@
             android:text="@string/action_add_article" />
 
         <Button
-            android:id="@+id/btnEditar"
+            android:id="@+id/btnEdit_Articles"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginStart="4dp"
@@ -118,7 +118,7 @@
             android:text="@string/action_edit_article" />
 
         <Button
-            android:id="@+id/btnEliminar"
+            android:id="@+id/btnDelete_Articles"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginStart="4dp"
@@ -128,7 +128,7 @@
             android:text="@string/action_delete_article" />
 
         <Button
-            android:id="@+id/btnMasOpciones"
+            android:id="@+id/btnMore_Articles"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_marginStart="4dp"

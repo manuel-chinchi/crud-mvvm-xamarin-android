@@ -35,10 +35,10 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetHomeButtonEnabled(true);
 
-            btnCancel = FindViewById<Button>(Resource.Id.btnCancel_Category);
+            btnCancel = FindViewById<Button>(Resource.Id.btnCancel_CreateCategory);
             btnCancel.Click += BtnCancel_Click;
 
-            btnAccept = FindViewById<Button>(Resource.Id.btnAccept_Category);
+            btnAccept = FindViewById<Button>(Resource.Id.btnAccept_CreateCategory);
             btnAccept.Click += BtnAccept_Click;
         }
 
@@ -60,7 +60,7 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
             toast.SetGravity(GravityFlags.Top | GravityFlags.CenterHorizontal, 0, 0);
             toast.Show();
 
-            var inpNameCategory = FindViewById<EditText>(Resource.Id.inpNameCategory);
+            var inpNameCategory = FindViewById<EditText>(Resource.Id.etName_CreateCategory);
             categoryService.AddCategory(new Category { Name = inpNameCategory.Text });
 
             SetResult(Result.Ok);

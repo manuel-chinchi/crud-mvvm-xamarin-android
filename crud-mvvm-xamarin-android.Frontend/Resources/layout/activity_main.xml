@@ -18,15 +18,15 @@
         android:textStyle="bold "
         android:textAlignment="center"
         android:layout_marginBottom="20dp"
-        android:id="@+id/lbl_title"/>
+        android:id="@+id/txtTitle_Main"/>
     <Button
         android:text="@string/action_articles"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_articles" />
+        android:id="@+id/btnArticles_Main" />
     <Button
         android:text="@string/action_categories"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:id="@+id/btn_categories" />
+        android:id="@+id/btnCategories_Main" />
 </LinearLayout>

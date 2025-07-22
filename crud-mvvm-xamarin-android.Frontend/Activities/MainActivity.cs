@@ -20,10 +20,10 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
 
             SetContentView(Resource.Layout.activity_main);
 
-            btnArticles = FindViewById<Button>(Resource.Id.btn_articles);
+            btnArticles = FindViewById<Button>(Resource.Id.btnArticles_Main);
             btnArticles.Click += BtnArticles_Click;
 
-            btnCategories = FindViewById<Button>(Resource.Id.btn_categories);
+            btnCategories = FindViewById<Button>(Resource.Id.btnCategories_Main);
             btnCategories.Click += BtnCategories_Click;
         }
 

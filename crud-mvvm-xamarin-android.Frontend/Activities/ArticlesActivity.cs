@@ -18,7 +18,7 @@ using AndroidX.AppCompat.App;
 namespace crud_mvvm_xamarin_android.Frontend.Activities
 {
     [Activity(Label = "Articles")]
-    public class ArticleActivity : AppCompatActivity
+    public class ArticlesActivity : AppCompatActivity
     {
         Button btnAdd, btnEdit, btnDelete;
         CheckBox chkSelectAll;
@@ -27,7 +27,7 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
         ArticleAdapter adapter;
         ArticleService articleService;
 
-        public ArticleActivity()
+        public ArticlesActivity()
         {
             articleService = new ArticleService();
             adapter = new ArticleAdapter(articleService.GetArticles().ToList());
@@ -42,22 +42,22 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetHomeButtonEnabled(true);
 
-            recyclerView = FindViewById<RecyclerView>(Resource.Id.lstArticles);
+            recyclerView = FindViewById<RecyclerView>(Resource.Id.rvArticles_Articles);
             recyclerView.SetLayoutManager(new LinearLayoutManager(this));
             recyclerView.SetAdapter(adapter);
 
-            btnAdd = FindViewById<Button>(Resource.Id.btnAgregar);
+            btnAdd = FindViewById<Button>(Resource.Id.btnAdd_Articles);
             btnAdd.Click += BtnAdd_Click;
 
-            btnEdit = FindViewById<Button>(Resource.Id.btnEditar);
+            btnEdit = FindViewById<Button>(Resource.Id.btnEdit_Articles);
             btnEdit.Enabled = false;
             btnEdit.Click += BtnEdit_Click;
 
-            btnDelete = FindViewById<Button>(Resource.Id.btnEliminar);
+            btnDelete = FindViewById<Button>(Resource.Id.btnDelete_Articles);
             btnDelete.Enabled = false;
             btnDelete.Click += BtnDelete_Click;
 
-            chkSelectAll = FindViewById<CheckBox>(Resource.Id.chkSelectAllItems);
+            chkSelectAll = FindViewById<CheckBox>(Resource.Id.cbSelectAll_Articles);
             chkSelectAll.CheckedChange += ChkSelectAllItems_CheckedChange;
         }
 

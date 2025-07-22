@@ -13,7 +13,7 @@
         android:padding="10dp">
 
         <EditText
-            android:id="@+id/inpNameArticle"
+            android:id="@+id/etName_CreateArticle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -21,7 +21,7 @@
             android:inputType="textPersonName" />
     
         <EditText
-            android:id="@+id/inpDetailsArticle"
+            android:id="@+id/etDetails_CreateArticle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="20dp"
@@ -29,7 +29,7 @@
             android:inputType="textMultiLine" />
 
         <Spinner
-            android:id="@+id/spnCategories"
+            android:id="@+id/spnCategory_CreateArticle"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="25dp"
@@ -63,7 +63,7 @@
             android:layout_margin="16dp">
 
             <ImageView
-                android:id="@+id/imgArticle"
+                android:id="@+id/imgImage_CreateArticle"
                 android:layout_width="200dp"
                 android:layout_height="200dp"
                 android:src="@drawable/ic_launcher_foreground"
@@ -72,7 +72,7 @@
                 android:contentDescription="Article Image" />
 
             <TextView
-                android:id="@+id/txtDeleteImage"
+                android:id="@+id/txtDeleteImage_CreateArticle"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:text="Delete image"
@@ -105,7 +105,7 @@
 
         <!-- Botón Aceptar -->
         <Button
-            android:id="@+id/btnAceptar"
+            android:id="@+id/btnAccept_CreateArticle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:text="@string/action_accept_create_article"
@@ -114,7 +114,7 @@
 
         <!-- Botón Cancelar -->
         <Button
-            android:id="@+id/btnCancelar"
+            android:id="@+id/btnCancel_CreateArticle"
             android:layout_width="0dp"
             android:layout_height="match_parent"
             android:layout_weight="1"
