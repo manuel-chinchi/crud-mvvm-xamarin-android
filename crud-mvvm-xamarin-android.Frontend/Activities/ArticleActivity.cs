@@ -5,17 +5,17 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using AndroidX.RecyclerView.Widget;
-using crud_xamarin_android.UI.Adapters;
-using crud_xamarin_android.Core.Models;
-using crud_xamarin_android.Core.Services;
-using crud_xamarin_android.UI.Decorations;
+using crud_mvvm_xamarin_android.Frontend.Adapters;
+using crud_mvvm_xamarin_android.Backend.Models;
+using crud_mvvm_xamarin_android.Backend.Services;
+using crud_mvvm_xamarin_android.Frontend.Decorations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AndroidX.AppCompat.App;
 
-namespace crud_xamarin_android.UI.Activities
+namespace crud_mvvm_xamarin_android.Frontend.Activities
 {
     [Activity(Label = "Articles")]
     public class ArticleActivity : AppCompatActivity

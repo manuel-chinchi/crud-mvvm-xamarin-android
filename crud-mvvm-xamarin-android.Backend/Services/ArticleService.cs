@@ -4,16 +4,16 @@ using Android.OS;
 using Android.Runtime;
 using Android.Views;
 using Android.Widget;
-using crud_xamarin_android.Core.Helpers;
-using crud_xamarin_android.Core.Models;
-using crud_xamarin_android.Core.Repositories;
-using crud_xamarin_android.Core.Repositories.Contracts;
+using crud_mvvm_xamarin_android.Backend.Helpers;
+using crud_mvvm_xamarin_android.Backend.Models;
+using crud_mvvm_xamarin_android.Backend.Repositories;
+using crud_mvvm_xamarin_android.Backend.Repositories.Contracts;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace crud_xamarin_android.Core.Services
+namespace crud_mvvm_xamarin_android.Backend.Services
 {
     public class ArticleService
     {
@@ -34,6 +34,7 @@ namespace crud_xamarin_android.Core.Services
 
         public IEnumerable<Article> GetArticles()
         {
+            //sss
             var articles = _articleRepository.GetAll().ToList();
 
             for (int i = 0; i < articles.Count; i++)

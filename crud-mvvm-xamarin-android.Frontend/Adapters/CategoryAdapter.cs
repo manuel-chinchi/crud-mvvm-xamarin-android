@@ -5,14 +5,14 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using AndroidX.RecyclerView.Widget;
-using crud_xamarin_android.Core.Models;
-using crud_xamarin_android.UI.Activities;
+using crud_mvvm_xamarin_android.Backend.Models;
+using crud_mvvm_xamarin_android.Frontend.Activities;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 
-namespace crud_xamarin_android.UI.Adapters
+namespace crud_mvvm_xamarin_android.Frontend.Adapters
 {
     public class CategoryAdapter : RecyclerView.Adapter
     {

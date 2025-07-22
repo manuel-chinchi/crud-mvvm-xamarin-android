@@ -8,15 +8,15 @@ using Android.Views;
 using Android.Widget;
 using AndroidX.AppCompat.App;
 using AndroidX.Core.Content;
-using crud_xamarin_android.Core.Helpers;
-using crud_xamarin_android.Core.Models;
-using crud_xamarin_android.Core.Services;
-using crud_xamarin_android.UI.Helpers;
+using crud_mvvm_xamarin_android.Backend.Helpers;
+using crud_mvvm_xamarin_android.Backend.Models;
+using crud_mvvm_xamarin_android.Backend.Services;
+using crud_mvvm_xamarin_android.Frontend.Helpers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 
-namespace crud_xamarin_android.UI.Activities
+namespace crud_mvvm_xamarin_android.Frontend.Activities
 {
     [Activity(Label = "")]
     public class CreateArticleActivity : AppCompatActivity
