@@ -6106,10 +6106,10 @@ namespace crud_mvvm_xamarin_android.Frontend
 			public const int abc_tooltip = 2131427355;
 			
 			// aapt resource value: 0x7F0B001C
-			public const int activity_article = 2131427356;
+			public const int activity_articles = 2131427356;
 			
 			// aapt resource value: 0x7F0B001D
-			public const int activity_category = 2131427357;
+			public const int activity_categories = 2131427357;
 			
 			// aapt resource value: 0x7F0B001E
 			public const int activity_create_article = 2131427358;

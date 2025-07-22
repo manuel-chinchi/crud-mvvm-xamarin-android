@@ -49,8 +49,8 @@ namespace crud_mvvm_xamarin_android.Frontend.Adapters
                     if (selectedPositions.Contains(holder.Position))
                         selectedPositions.Remove(holder.Position);
                 }
-                ((ArticleActivity)holder.ItemView.Context).ToggleDeleteButton(selectedPositions.Count > 0);
-                ((ArticleActivity)holder.ItemView.Context).ToggleEditButton(selectedPositions.Count == 1);
+                ((ArticlesActivity)holder.ItemView.Context).ToggleDeleteButton(selectedPositions.Count > 0);
+                ((ArticlesActivity)holder.ItemView.Context).ToggleEditButton(selectedPositions.Count == 1);
             };
         }
 

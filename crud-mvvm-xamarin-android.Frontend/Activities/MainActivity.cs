@@ -36,13 +36,13 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
 
         private void BtnCategories_Click(object sender, System.EventArgs e)
         {
-            var intent = new Intent(this, typeof(CategoryActivity));
+            var intent = new Intent(this, typeof(CategoriesActivity));
             StartActivity(intent);
         }
 
         private void BtnArticles_Click(object sender, System.EventArgs e)
         {
-            var intent = new Intent(this, typeof(ArticleActivity));
+            var intent = new Intent(this, typeof(ArticlesActivity));
             StartActivity(intent);
         }
     }

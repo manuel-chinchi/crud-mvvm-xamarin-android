@@ -48,7 +48,7 @@ namespace crud_mvvm_xamarin_android.Frontend.Adapters
                     if (selectedPositions.Contains(holder.Position))
                         selectedPositions.Remove(holder.Position);
                 }
-                ((CategoryActivity)holder.ItemView.Context).ToogleDeleteButton(selectedPositions.Count> 0);
+                ((CategoriesActivity)holder.ItemView.Context).ToogleDeleteButton(selectedPositions.Count> 0);
             };
 
         }

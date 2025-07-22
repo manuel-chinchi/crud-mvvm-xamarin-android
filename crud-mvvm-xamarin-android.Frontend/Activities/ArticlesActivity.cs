@@ -37,7 +37,7 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
         {
             base.OnCreate(savedInstanceState);
 
-            SetContentView(Resource.Layout.activity_article);
+            SetContentView(Resource.Layout.activity_articles);
 
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetHomeButtonEnabled(true);
