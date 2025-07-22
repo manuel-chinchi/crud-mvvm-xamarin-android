@@ -34,7 +34,6 @@ namespace crud_mvvm_xamarin_android.Backend.Services
 
         public IEnumerable<Article> GetArticles()
         {
-            //sss
             var articles = _articleRepository.GetAll().ToList();
 
             for (int i = 0; i < articles.Count; i++)
