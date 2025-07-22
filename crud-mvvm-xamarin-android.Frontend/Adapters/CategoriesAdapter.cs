@@ -14,11 +14,11 @@ using System.Text;
 
 namespace crud_mvvm_xamarin_android.Frontend.Adapters
 {
-    public class CategoryAdapter : RecyclerView.Adapter
+    public class CategoriesAdapter : RecyclerView.Adapter
     {
         List<Category> categories;
         List<int> selectedPositions;
-        public CategoryAdapter(List<Category> categories)
+        public CategoriesAdapter(List<Category> categories)
         {
             this.categories = categories;
             this.selectedPositions = new List<int>();

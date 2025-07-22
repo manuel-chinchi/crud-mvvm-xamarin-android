@@ -5,8 +5,9 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using AndroidX.AppCompat.App;
-using crud_mvvm_xamarin_android.Backend.Models;
-using crud_mvvm_xamarin_android.Backend.Services;
+using crud_mvvm_xamarin_android.Backend.ViewModels;
+using crud_mvvm_xamarin_android.Frontend.Activities.Contracts;
+using crud_mvvm_xamarin_android.Frontend.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -15,15 +16,17 @@ using System.Text;
 namespace crud_mvvm_xamarin_android.Frontend.Activities
 {
     [Activity(Label = "")]
-    public class CreateCategoryActivity : AppCompatActivity
+    public class CreateCategoryActivity : AppCompatActivity, IBaseActivity
     {
-        Button btnAccept, btnCancel;
+        private Button _btnAccept;
+        private Button _btnCancel;
+        private EditText _etName;
 
-        CategoryService categoryService;
+        private readonly CreateCategoryViewModel _viewModel;
 
         public CreateCategoryActivity()
         {
-            categoryService = new CategoryService();
+            _viewModel = new CreateCategoryViewModel();
         }
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -35,11 +38,9 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetHomeButtonEnabled(true);
 
-            btnCancel = FindViewById<Button>(Resource.Id.btnCancel_CreateCategory);
-            btnCancel.Click += BtnCancel_Click;
+            InitializeControls();
 
-            btnAccept = FindViewById<Button>(Resource.Id.btnAccept_CreateCategory);
-            btnAccept.Click += BtnAccept_Click;
+            BindControls();
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
@@ -54,20 +55,34 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
             }
         }
 
-        private void BtnAccept_Click(object sender, EventArgs e)
+        private void InitializeControls()
         {
-            var toast = Toast.MakeText(this, "Category successfully added!", ToastLength.Short);
+            _btnAccept = FindViewById<Button>(Resource.Id.btnAccept_CreateCategory);
+            _btnCancel = FindViewById<Button>(Resource.Id.btnCancel_CreateCategory);
+            _etName = FindViewById<EditText>(Resource.Id.etName_CreateCategory);
+        }
+
+        public void BindControls()
+        {
+            _etName.BindProperty(nameof(_etName.Text), _viewModel, nameof(_viewModel.Name));
+            _btnAccept.BindCommand("Click", _viewModel, nameof(_viewModel.SaveCommand));
+            _btnCancel.BindCommand("Click", _viewModel, nameof(_viewModel.CancelCommand));
+
+            _viewModel.SaveOkEvent += _viewModel_SaveOkEvent;
+            _viewModel.CancelOkEvent += _viewModel_CancelOkEvent;
+        }
+
+        private void _viewModel_SaveOkEvent(string sucessfulMsg)
+        {
+            var toast = Toast.MakeText(this, sucessfulMsg, ToastLength.Short);
             toast.SetGravity(GravityFlags.Top | GravityFlags.CenterHorizontal, 0, 0);
             toast.Show();
-
-            var inpNameCategory = FindViewById<EditText>(Resource.Id.etName_CreateCategory);
-            categoryService.AddCategory(new Category { Name = inpNameCategory.Text });
 
             SetResult(Result.Ok);
             Finish();
         }
 
-        private void BtnCancel_Click(object sender, EventArgs e)
+        private void _viewModel_CancelOkEvent()
         {
             Finish();
         }

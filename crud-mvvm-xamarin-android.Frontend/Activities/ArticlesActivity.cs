@@ -5,32 +5,33 @@ using Android.Runtime;
 using Android.Views;
 using Android.Widget;
 using AndroidX.RecyclerView.Widget;
-using crud_mvvm_xamarin_android.Frontend.Adapters;
-using crud_mvvm_xamarin_android.Backend.Models;
-using crud_mvvm_xamarin_android.Backend.Services;
-using crud_mvvm_xamarin_android.Frontend.Decorations;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using AndroidX.AppCompat.App;
+using crud_mvvm_xamarin_android.Frontend.Adapters;
+using crud_mvvm_xamarin_android.Frontend.Activities.Contracts;
+using crud_mvvm_xamarin_android.Backend.ViewModels;
+using crud_mvvm_xamarin_android.Frontend.Models;
 
 namespace crud_mvvm_xamarin_android.Frontend.Activities
 {
     [Activity(Label = "Articles")]
-    public class ArticlesActivity : AppCompatActivity
+    public class ArticlesActivity : AppCompatActivity, IBaseActivity
     {
-        Button btnAdd, btnEdit, btnDelete;
-        CheckBox chkSelectAll;
-
-        RecyclerView recyclerView;
-        ArticleAdapter adapter;
-        ArticleService articleService;
+        private Button _btnAdd;
+        private Button _btnEdit;
+        private Button _btnDelete;
+        private CheckBox _chkSelectAll;
+        private RecyclerView _rvArticles;
+        private ArticlesAdapter _adapter;
+        private readonly ArticlesViewModel _viewModel;
 
         public ArticlesActivity()
         {
-            articleService = new ArticleService();
-            adapter = new ArticleAdapter(articleService.GetArticles().ToList());
+            _viewModel = new ArticlesViewModel();
+            _adapter = new ArticlesAdapter(_viewModel.Articles.ToList());
         }
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -42,23 +43,9 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetHomeButtonEnabled(true);
 
-            recyclerView = FindViewById<RecyclerView>(Resource.Id.rvArticles_Articles);
-            recyclerView.SetLayoutManager(new LinearLayoutManager(this));
-            recyclerView.SetAdapter(adapter);
+            InitializeControls();
 
-            btnAdd = FindViewById<Button>(Resource.Id.btnAdd_Articles);
-            btnAdd.Click += BtnAdd_Click;
-
-            btnEdit = FindViewById<Button>(Resource.Id.btnEdit_Articles);
-            btnEdit.Enabled = false;
-            btnEdit.Click += BtnEdit_Click;
-
-            btnDelete = FindViewById<Button>(Resource.Id.btnDelete_Articles);
-            btnDelete.Enabled = false;
-            btnDelete.Click += BtnDelete_Click;
-
-            chkSelectAll = FindViewById<CheckBox>(Resource.Id.cbSelectAll_Articles);
-            chkSelectAll.CheckedChange += ChkSelectAllItems_CheckedChange;
+            BindControls();
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
@@ -73,44 +60,47 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
             }
         }
 
-        protected override void OnActivityResult(int requestCode, Result resultCode, Intent data)
+        protected override void OnActivityResult(
+            int requestCode,
+            [GeneratedEnum] Result resultCode,
+            Intent data)
         {
             base.OnActivityResult(requestCode, resultCode, data);
 
             if (requestCode == 1 && resultCode == Result.Ok)
             {
-                adapter.UpdateArticles(articleService.GetArticles().ToList());
-                adapter.ClearSelectedPositions();
-                adapter.NotifyDataSetChanged();
-                btnEdit.Enabled = false;
-                btnDelete.Enabled = false;
+                _adapter.UpdateArticles(_viewModel.Articles.ToList());
+                _adapter.ClearSelectedPositions();
+                _adapter.NotifyDataSetChanged();
+                _btnEdit.Enabled = false;
+                _btnDelete.Enabled = false;
             }
 
             if (requestCode == 1000 && resultCode == Result.Ok)
             {
-                adapter.UpdateArticles(articleService.GetArticles().ToList());
-                adapter.NotifyDataSetChanged();
+                _adapter.UpdateArticles(_viewModel.Articles.ToList());
+                _adapter.NotifyDataSetChanged();
             }
         }
 
-        private void ChkSelectAllItems_CheckedChange(object sender, CompoundButton.CheckedChangeEventArgs e)
+        private void ChkSelectAll_CheckedChange(object sender, CompoundButton.CheckedChangeEventArgs e)
         {
             if (e.IsChecked)
             {
-                adapter.SelectAllItems(true);
+                _adapter.SelectAllItems(true);
             }
             else
             {
-                adapter.SelectAllItems(false);
+                _adapter.SelectAllItems(false);
             }
         }
 
-        private void BtnEdit_Click(object sender, EventArgs e)
+        private void _viewModel_ShowDialogEditEvent()
         {
-            if (adapter.GetSelectedPositions().Count == 1)
+            if (_adapter.GetSelectedPositions().Count == 1)
             {
-                int position = adapter.GetSelectedPositions()[0];
-                var article = adapter.GetArticleAt(position);
+                int position = _adapter.GetSelectedPositions()[0];
+                var article = _adapter.GetArticleAt(position);
 
                 var intent = new Intent(this, typeof(EditArticleActivity));
                 intent.PutExtra("ArticleId", article.Id);
@@ -120,7 +110,7 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
             }
         }
 
-        private void BtnDelete_Click(object sender, EventArgs e)
+        private void _viewModel_ShowDialogDeleteEvent()
         {
             var builder = new AndroidX.AppCompat.App.AlertDialog.Builder(this);
             builder.SetTitle(Resource.String.title_delete);
@@ -138,7 +128,7 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
             alertDialog.Show();
         }
 
-        private void BtnAdd_Click(object sender, EventArgs e)
+        private void _viewModel_ShowDialogAddEvent()
         {
             var intent = new Intent(this, typeof(CreateArticleActivity));
             StartActivityForResult(intent, 1000);
@@ -146,33 +136,58 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
 
         private void DeleteArticle()
         {
-            var positions = adapter.GetSelectedPositions();
+            var positions = _adapter.GetSelectedPositions();
 
             foreach (var pos in positions)
             {
-                articleService.DeleteArticle(adapter.GetArticleAt(pos).Id);
-                adapter.RemoveAt(pos);
+                _viewModel.DeleteCommand.Execute(_adapter.GetArticleAt(pos).Id);
+                _adapter.RemoveAt(pos);
             }
 
-            adapter.UpdateArticles(articleService.GetArticles().ToList());
-            adapter.ClearSelectedPositions();
+            _adapter.UpdateArticles(_viewModel.Articles.ToList());
+            _adapter.ClearSelectedPositions();
             ToggleDeleteButton(false);
             ToogleCheckHeader(false);
         }
 
         public void ToggleDeleteButton(bool isAnySelected)
         {
-            btnDelete.Enabled = isAnySelected;
+            _btnDelete.Enabled = isAnySelected;
         }
 
         public void ToggleEditButton(bool isOneItemSelected)
         {
-            btnEdit.Enabled = isOneItemSelected;
+            _btnEdit.Enabled = isOneItemSelected;
         }
 
         private void ToogleCheckHeader(bool isChecked)
         {
-            chkSelectAll.Checked = false;
+            _chkSelectAll.Checked = false;
+        }
+
+        private void InitializeControls()
+        {
+            _btnAdd = FindViewById<Button>(Resource.Id.btnAdd_Articles);
+            _btnEdit = FindViewById<Button>(Resource.Id.btnEdit_Articles);
+            _btnEdit.Enabled = false;
+            _btnDelete = FindViewById<Button>(Resource.Id.btnDelete_Articles);
+            _btnDelete.Enabled = false;
+            _rvArticles = FindViewById<RecyclerView>(Resource.Id.rvArticles_Articles);
+            _rvArticles.SetLayoutManager(new LinearLayoutManager(this));
+            _rvArticles.SetAdapter(_adapter);
+            _chkSelectAll = FindViewById<CheckBox>(Resource.Id.cbSelectAll_Articles);
+            _chkSelectAll.CheckedChange += ChkSelectAll_CheckedChange;
+        }
+
+        public void BindControls()
+        {
+            _viewModel.ShowDialogAddEvent += _viewModel_ShowDialogAddEvent;
+            _viewModel.ShowDialogEditEvent += _viewModel_ShowDialogEditEvent;
+            _viewModel.ShowDialogDeleteEvent += _viewModel_ShowDialogDeleteEvent;
+
+            _btnAdd.BindCommand(eventName: "Click", _viewModel, nameof(_viewModel.ShowDialogAddCommand));
+            _btnEdit.BindCommand(eventName: "Click", _viewModel, nameof(_viewModel.ShowDialogEditCommand));
+            _btnDelete.BindCommand(eventName: "Click", _viewModel, nameof(_viewModel.ShowDialogDeleteCommand));
         }
     }
 }

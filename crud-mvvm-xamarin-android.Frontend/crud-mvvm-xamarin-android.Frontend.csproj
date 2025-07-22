@@ -68,8 +68,8 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Activities\Contracts\IBaseActivity.cs" />
-    <Compile Include="Adapters\ArticleAdapter.cs" />
-    <Compile Include="Adapters\CategoryAdapter.cs" />
+    <Compile Include="Adapters\ArticlesAdapter.cs" />
+    <Compile Include="Adapters\CategoriesAdapter.cs" />
     <Compile Include="Activities\ArticlesActivity.cs" />
     <Compile Include="Activities\CategoriesActivity.cs" />
     <Compile Include="Activities\CreateArticleActivity.cs" />

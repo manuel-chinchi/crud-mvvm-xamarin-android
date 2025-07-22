@@ -7,8 +7,10 @@ using Android.Widget;
 using AndroidX.AppCompat.App;
 using AndroidX.RecyclerView.Widget;
 using crud_mvvm_xamarin_android.Backend.Models;
-using crud_mvvm_xamarin_android.Backend.Services;
+using crud_mvvm_xamarin_android.Backend.ViewModels;
+using crud_mvvm_xamarin_android.Frontend.Activities.Contracts;
 using crud_mvvm_xamarin_android.Frontend.Adapters;
+using crud_mvvm_xamarin_android.Frontend.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -17,19 +19,19 @@ using System.Text;
 namespace crud_mvvm_xamarin_android.Frontend.Activities
 {
     [Activity(Label = "Categories")]
-    public class CategoriesActivity : AppCompatActivity
+    public class CategoriesActivity : AppCompatActivity, IBaseActivity
     {
-        Button btnAdd, btnDelete;
-        CheckBox chkSelectAll;
-
-        RecyclerView recyclerView;
-        CategoryAdapter adapter;
-        CategoryService categoryService;
+        private Button _btnAdd;
+        private Button _btnDelete;
+        private CheckBox _chkSelectAll;
+        private RecyclerView _rvCategories;
+        private CategoriesAdapter _adapter;
+        private readonly CategoriesViewModel _viewModel;
 
         public CategoriesActivity()
         {
-            categoryService = new CategoryService();
-            adapter = new CategoryAdapter(categoryService.GetCategories().ToList());
+            _viewModel = new CategoriesViewModel();
+            _adapter = new CategoriesAdapter(_viewModel.Categories.ToList());
         }
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -37,23 +39,13 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
             base.OnCreate(savedInstanceState);
 
             SetContentView(Resource.Layout.activity_categories);
-            
+
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetHomeButtonEnabled(true);
 
-            recyclerView = FindViewById<RecyclerView>(Resource.Id.rvCategories_Categories);
-            recyclerView.SetLayoutManager(new LinearLayoutManager(this));
-            recyclerView.SetAdapter(adapter);
+            InitializeControls();
 
-            btnAdd = FindViewById<Button>(Resource.Id.btnAdd_Categories);
-            btnAdd.Click += BtnAddCategory_Click;
-
-            btnDelete = FindViewById<Button>(Resource.Id.btnDelete_Categories);
-            btnDelete.Enabled = false;
-            btnDelete.Click += BtnDeleteCategory_Click;
-
-            chkSelectAll = FindViewById<CheckBox>(Resource.Id.cbSelectAll_Categories);
-            chkSelectAll.CheckedChange += ChkSelectAllCategories_CheckedChange;
+            BindControls();
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
@@ -68,36 +60,45 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
             }
         }
 
-        protected override void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent data)
+        protected override void OnActivityResult(
+            int requestCode,
+            [GeneratedEnum] Result resultCode,
+            Intent data)
         {
             base.OnActivityResult(requestCode, resultCode, data);
 
-            if (requestCode == 1000 && resultCode ==Result.Ok)
+            if (requestCode == 1000 && resultCode == Result.Ok)
             {
-                adapter.UpdateCategories(categoryService.GetCategories().ToList());
-                adapter.NotifyDataSetChanged();
+                //adapter.UpdateCategories(_categoryService.GetCategories().ToList());
+                _adapter.UpdateCategories(_viewModel.Categories.ToList());
+                _adapter.NotifyDataSetChanged();
             }
         }
 
-        private void ChkSelectAllCategories_CheckedChange(object sender, CompoundButton.CheckedChangeEventArgs e)
+        internal void ToogleDeleteButton(bool isAnySelected)
+        {
+            _btnDelete.Enabled = isAnySelected ? true : false;
+        }
+
+        private void ChkSelectAll_CheckedChange(object sender, CompoundButton.CheckedChangeEventArgs e)
         {
             if (e.IsChecked)
             {
-                adapter.SelectAllItems(true);
+                _adapter.SelectAllItems(true);
             }
             else
             {
-                adapter.SelectAllItems(false);
+                _adapter.SelectAllItems(false);
             }
         }
 
-        private void BtnAddCategory_Click(object sender, EventArgs e)
+        private void _viewModel_ShowDialogAddEvent()
         {
             var intent = new Intent(this, typeof(CreateCategoryActivity));
             StartActivityForResult(intent, 1000);
         }
 
-        private void BtnDeleteCategory_Click(object sender, EventArgs e)
+        private void _viewModel_ShowDialogDeleteEvent()
         {
             var builder = new AndroidX.AppCompat.App.AlertDialog.Builder(this);
             builder.SetTitle(Resource.String.title_delete);
@@ -108,7 +109,7 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
             });
             builder.SetNegativeButton("No", (senderAlert, args) =>
             {
-                Toast.MakeText(this, Resource.String.message_cancel , ToastLength.Short).Show();
+                Toast.MakeText(this, Resource.String.message_cancel, ToastLength.Short).Show();
             });
 
             var alertDialog = builder.Create();
@@ -118,11 +119,11 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
         private void ConfirmOrCancelDeleteCategory()
         {
             bool hasRelatedArticles = false;
-            var positions = adapter.GetSelectedPositions();
+            var positions = _adapter.GetSelectedPositions();
 
             foreach (var pos in positions)
             {
-                var category = (Category)adapter.GetItemAt(pos);
+                var category = (Category)_adapter.GetItemAt(pos);
                 if (category.ArticleCount != 0)
                 {
                     hasRelatedArticles = true;
@@ -154,28 +155,40 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
 
         private void DeleteCategory()
         {
-            var positions = adapter.GetSelectedPositions();
+            var positions = _adapter.GetSelectedPositions();
 
             foreach (var pos in positions)
             {
-                categoryService.DeleteCategory(((Category)adapter.GetItemAt(pos)).Id);
-                adapter.RemoveAt(pos);
+                var categoryId = ((Category)_adapter.GetItemAt(pos)).Id;
+                _viewModel.DeleteCommand.Execute(categoryId);
+                _adapter.RemoveAt(pos);
             }
 
-            adapter.UpdateCategories(categoryService.GetCategories().ToList());
-            adapter.ClearSelectedPositions();
-            ToogleDeleteButton(false);
-            ToogleCheckHeader(false);
+            _adapter.UpdateCategories(_viewModel.Categories.ToList());
+            _adapter.ClearSelectedPositions();
+            _btnDelete.Enabled = false;
+            _chkSelectAll.Checked = false;
         }
 
-        public void ToogleDeleteButton(bool isAnySelected)
+        private void InitializeControls()
         {
-            btnDelete.Enabled = isAnySelected;
+            _btnAdd = FindViewById<Button>(Resource.Id.btnAdd_Categories);
+            _btnDelete = FindViewById<Button>(Resource.Id.btnDelete_Categories);
+            _btnDelete.Enabled = false;
+            _rvCategories = FindViewById<RecyclerView>(Resource.Id.rvCategories_Categories);
+            _rvCategories.SetLayoutManager(new LinearLayoutManager(this));
+            _rvCategories.SetAdapter(_adapter);
+            _chkSelectAll = FindViewById<CheckBox>(Resource.Id.cbSelectAll_Categories);
+            _chkSelectAll.CheckedChange += ChkSelectAll_CheckedChange;
         }
 
-        public void ToogleCheckHeader(bool isChecked)
+        public void BindControls()
         {
-            chkSelectAll.Checked = isChecked;
+            _viewModel.ShowDialogDeleteEvent += _viewModel_ShowDialogDeleteEvent;
+            _viewModel.ShowDialogAddEvent += _viewModel_ShowDialogAddEvent;
+
+            _btnAdd.BindCommand("Click", _viewModel, nameof(_viewModel.ShowDialogAddCommand));
+            _btnDelete.BindCommand("Click", _viewModel, nameof(_viewModel.ShowDialogDeleteCommand));
         }
     }
 }

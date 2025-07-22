@@ -14,12 +14,12 @@ using System.Text;
 
 namespace crud_mvvm_xamarin_android.Frontend.Adapters
 {
-    public class ArticleAdapter : RecyclerView.Adapter
+    public class ArticlesAdapter : RecyclerView.Adapter
     {
         List<Article> articles;
         List<int> selectedPositions;
 
-        public ArticleAdapter(List<Article> articles)
+        public ArticlesAdapter(List<Article> articles)
         {
             this.articles = articles;
             this.selectedPositions = new List<int>();

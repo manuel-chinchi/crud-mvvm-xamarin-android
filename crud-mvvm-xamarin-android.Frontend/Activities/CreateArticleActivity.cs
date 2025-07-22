@@ -8,10 +8,11 @@ using Android.Views;
 using Android.Widget;
 using AndroidX.AppCompat.App;
 using AndroidX.Core.Content;
-using crud_mvvm_xamarin_android.Backend.Helpers;
 using crud_mvvm_xamarin_android.Backend.Models;
-using crud_mvvm_xamarin_android.Backend.Services;
+using crud_mvvm_xamarin_android.Backend.ViewModels;
+using crud_mvvm_xamarin_android.Frontend.Activities.Contracts;
 using crud_mvvm_xamarin_android.Frontend.Helpers;
+using crud_mvvm_xamarin_android.Frontend.Models;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -19,25 +20,26 @@ using System.Linq;
 namespace crud_mvvm_xamarin_android.Frontend.Activities
 {
     [Activity(Label = "")]
-    public class CreateArticleActivity : AppCompatActivity
+    public class CreateArticleActivity : AppCompatActivity, IBaseActivity
     {
-        Button btnAccept, btnCancel;
-        Spinner spnCategories;
-        ImageView imgArticle;
-        TextView txtDeleteImage;
+        private Button _btnAccept;
+        private Button _btnCancel;
+        private EditText _etName;
+        private EditText _etDetails;
+        private ImageView _imgImage;
+        private TextView _txtDeleteImage;
+        private Spinner _spnCategory;
 
-        ArticleService articleService;
-        CategoryService categoryService;
-        List<Category> categories;
-        Category categorySelected;
-        Java.IO.File photoFile;
+        private static List<Category> s_categories;
+        private static Java.IO.File s_image;
+        private readonly CreateArticleViewModel _viewModel;
+        private readonly ObservableImageManager _imageManager;
 
         public CreateArticleActivity()
         {
-            articleService = new ArticleService();
-            categoryService = new CategoryService();
-            categories = categoryService.GetCategories().ToList();
-            categories = categories.OrderBy(c => c.Name).ToList();
+            _viewModel = new CreateArticleViewModel();
+            _imageManager = new ObservableImageManager();
+            s_categories = _viewModel.Categories.ToList();
         }
 
         protected override void OnCreate(Bundle savedInstanceState)
@@ -49,39 +51,9 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetHomeButtonEnabled(true);
 
-            btnAccept = FindViewById<Button>(Resource.Id.btnAccept_CreateArticle);
-            btnAccept.Click += BtnAccept_Click;
+            InitializeControls();
 
-            btnCancel = FindViewById<Button>(Resource.Id.btnCancel_CreateArticle);
-            btnCancel.Click += BtnCancel_Click;
-
-            imgArticle = FindViewById<ImageView>(Resource.Id.imgImage_CreateArticle);
-            imgArticle.Click += ImgArticle_Click;
-
-            txtDeleteImage = FindViewById<TextView>(Resource.Id.txtDeleteImage_CreateArticle);
-            txtDeleteImage.Visibility = ViewStates.Gone;
-            txtDeleteImage.Click += TxtDeleteImage_Click;
-
-            spnCategories = FindViewById<Spinner>(Resource.Id.spnCategory_CreateArticle);
-            var categories = categoryService.GetCategories().OrderBy(c=>c.Name).ToList();
-            List<string> spnDataSource;
-            ArrayAdapter spnAdapter;
-
-            if (categories.Count > 0)
-            {
-                spnDataSource = categories.Select(c => c.Name).ToList();
-            }
-            else
-            {
-                spnDataSource = new List<string> { "(NO CATEGORIES AVAILABLE)" };
-                spnCategories.Enabled = false;
-            }
-
-            spnAdapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleSpinnerItem, spnDataSource);
-            spnAdapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
-            spnCategories.Adapter = spnAdapter;
-
-            spnCategories.ItemSelected += SpnCategories_ItemSelected;
+            BindControls();
         }
 
         public override bool OnOptionsItemSelected(IMenuItem item)
@@ -96,34 +68,44 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
             }
         }
 
-        protected override void OnActivityResult(int requestCode, [GeneratedEnum] Result resultCode, Intent data)
+        protected override void OnActivityResult(
+            int requestCode,
+            [GeneratedEnum] Result resultCode,
+            Intent data)
         {
             base.OnActivityResult(requestCode, resultCode, data);
 
-            if (CameraHelper.CheckResultCamera(requestCode,resultCode))
+            if (CameraHelper.CheckResultCamera(requestCode, resultCode))
             {
-                imgArticle.SetImageURI(Android.Net.Uri.Parse(photoFile.AbsolutePath));
-                txtDeleteImage.Visibility = ViewStates.Visible;
+                _imgImage.SetImageURI(Android.Net.Uri.Parse(s_image.AbsolutePath));
+                _txtDeleteImage.Visibility = ViewStates.Visible;
+
+                _imageManager.UpdateFromFile(s_image);
             }
 
             if (GaleryHelper.CheckResultGalery(requestCode, resultCode))
             {
-                if (data!=null)
+                if (data != null)
                 {
                     var imageUri = data.Data;
                     var bitmap = ImageHelper.GetResizedBitmap(imageUri, this);
-                    imgArticle.SetImageBitmap(bitmap);
-                    photoFile = ImageHelper.CreateImageFileFromUri2(this, imageUri);
-                    txtDeleteImage.Visibility = ViewStates.Visible;
+                    _imgImage.SetImageBitmap(bitmap);
+                    s_image = ImageHelper.CreateImageFileFromUri2(this, imageUri);
+                    _txtDeleteImage.Visibility = ViewStates.Visible;
+
+                    _imageManager.UpdateFromURI(imageUri, this);
                 }
             }
         }
-        
-        public override void OnRequestPermissionsResult(int requestCode, string[] permissions, [GeneratedEnum] Permission[] grantResults)
+
+        public override void OnRequestPermissionsResult(
+            int requestCode,
+            string[] permissions,
+            [GeneratedEnum] Permission[] grantResults)
         {
             base.OnRequestPermissionsResult(requestCode, permissions, grantResults);
 
-            if (CameraHelper.CheckCameraPermission(requestCode,grantResults))
+            if (CameraHelper.CheckCameraPermission(requestCode, grantResults))
             {
                 OpenCamera();
             }
@@ -132,69 +114,6 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
             {
                 OpenGallery();
             }
-        }
-
-        private void ImgArticle_Click(object sender, EventArgs e)
-        {
-            string[] options = { "Take a photo", "Choose from Galery" };
-            var builder = new AndroidX.AppCompat.App.AlertDialog.Builder(this);
-            builder.SetTitle("Select option");
-            builder.SetItems(options, (dialog, which) =>
-            {
-                switch (which.Which)
-                {
-                    case 0:
-                        GoToCamera();
-                        break;
-                    case 1:
-                        GoToGallery();
-                        break;
-                }
-            });
-            builder.Show();
-        }
-
-        private void SpnCategories_ItemSelected(object sender, AdapterView.ItemSelectedEventArgs e)
-        {
-            if (categories.Count > 0)
-            {
-                categorySelected = categories[e.Position];
-            }
-        }
-
-        private void TxtDeleteImage_Click(object sender, EventArgs e)
-        {
-            imgArticle.SetImageResource(Resource.Drawable.ic_launcher_foreground);
-            photoFile = null;
-            txtDeleteImage.Visibility = ViewStates.Gone;
-        }
-
-        private void BtnAccept_Click(object sender, EventArgs e)
-        {
-            var toast = Toast.MakeText(this, Resource.String.message_success_article_created, ToastLength.Short);
-            toast.SetGravity(GravityFlags.Top | GravityFlags.CenterHorizontal, 0, 0);
-            toast.Show();
-
-            var inpNameArt = FindViewById<EditText>(Resource.Id.etName_CreateArticle);
-            var inpDetailsArt = FindViewById<EditText>(Resource.Id.etDetails_CreateArticle);
-
-            var article = new Article
-            {
-                Name = inpNameArt.Text,
-                Details = inpDetailsArt.Text,
-                CategoryId = (categorySelected != null ? categorySelected.Id : CategoryHelper.ID_EMPTY_CATEGORY),
-                ImagePath = photoFile != null ? photoFile.AbsolutePath : null,
-                ImageData = photoFile != null ? ImageHelper.GetImageAsByteArray(photoFile.AbsolutePath) : null,
-            };
-            articleService.AddArticle(article);
-
-            SetResult(Result.Ok);
-            Finish();
-        }
-
-        private void BtnCancel_Click(object sender, EventArgs e)
-        {
-            Finish();
         }
 
         private void GoToCamera()
@@ -223,16 +142,16 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
 
         private void OpenCamera()
         {
-            Intent takePictureIntent = new Intent(MediaStore.ActionImageCapture);
-            //TODO //TODO For devices without a camera this could cause a runtime error.
+            Intent intent = new Intent(MediaStore.ActionImageCapture);
+            //TODO For devices without a camera this could cause a runtime error.
             //if (takePictureIntent.ResolveActivity(PackageManager) != null)
             {
-                photoFile = ImageHelper.CreateImageFile(this);
-                if (photoFile != null)
+                s_image = ImageHelper.CreateImageFile(this);
+                if (s_image != null)
                 {
-                    var photoURI = FileProvider.GetUriForFile(this, CommonHelper.GetFileProviderAuthorities(this), photoFile);
-                    takePictureIntent.PutExtra(MediaStore.ExtraOutput, photoURI);
-                    StartActivityForResult(takePictureIntent, CameraHelper.REQUEST_OPEN_CAMERA);
+                    var photoURI = FileProvider.GetUriForFile(this, CommonHelper.GetFileProviderAuthorities(this), s_image);
+                    intent.PutExtra(MediaStore.ExtraOutput, photoURI);
+                    StartActivityForResult(intent, CameraHelper.REQUEST_OPEN_CAMERA);
                 }
             }
         }
@@ -242,6 +161,95 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
             Intent chooseItemFromGalleryIntent = new Intent(Intent.ActionPick);
             chooseItemFromGalleryIntent.SetType("image/*");
             StartActivityForResult(chooseItemFromGalleryIntent, GaleryHelper.REQUEST_OPEN_GALLERY);
+        }
+
+        private void InitializeControls()
+        {
+            _btnAccept = FindViewById<Button>(Resource.Id.btnAccept_CreateArticle);
+            _btnCancel = FindViewById<Button>(Resource.Id.btnCancel_CreateArticle);
+            _etName = FindViewById<EditText>(Resource.Id.etName_CreateArticle);
+            _etDetails = FindViewById<EditText>(Resource.Id.etDetails_CreateArticle);
+            _imgImage = FindViewById<ImageView>(Resource.Id.imgImage_CreateArticle);
+            _txtDeleteImage = FindViewById<TextView>(Resource.Id.txtDeleteImage_CreateArticle);
+            _spnCategory = FindViewById<Spinner>(Resource.Id.spnCategory_CreateArticle);
+
+            List<string> categoryNames;
+            ArrayAdapter adapter;
+            if (s_categories.Count > 0)
+            {
+                categoryNames = s_categories.Select(c => c.Name).ToList();
+            }
+            else
+            {
+                categoryNames = new List<string> { "(NO CATEGORIES AVAILABLE)" };
+                _spnCategory.Enabled = false;
+            }
+            adapter = new ArrayAdapter<string>(this, Android.Resource.Layout.SimpleSpinnerItem, categoryNames);
+            adapter.SetDropDownViewResource(Android.Resource.Layout.SimpleSpinnerDropDownItem);
+            _spnCategory.Adapter = adapter;
+
+            _txtDeleteImage.Click += (s, e) =>
+            {
+                _txtDeleteImage.Visibility = ViewStates.Gone;
+                _imageManager.Clear();
+                _imgImage.SetImageResource(Resource.Drawable.ic_launcher_foreground);
+            };
+            _txtDeleteImage.Visibility = ViewStates.Gone;
+        }
+
+        public void BindControls()
+        {
+            _etName.BindProperty(nameof(_etName.Text), _viewModel, nameof(_viewModel.Name));
+            _etDetails.BindProperty(nameof(_etDetails.Text), _viewModel, nameof(_viewModel.Details));
+            _spnCategory.BindProperty(nameof(_spnCategory.SelectedItemPosition), _viewModel, nameof(_viewModel.SelectedCategoryIndex));
+            _imageManager.Control = _imgImage;
+            _imageManager.BindProperty(nameof(_imageManager.Path), _viewModel, nameof(_viewModel.ImagePath));
+            _imageManager.BindProperty(nameof(_imageManager.Bytes), _viewModel, nameof(_viewModel.ImageData));
+            _btnAccept.BindCommand("Click", _viewModel, nameof(_viewModel.CommandSave));
+            _btnCancel.BindCommand("Click", _viewModel, nameof(_viewModel.CommandCancel));
+            _imgImage.BindCommand("Click", _viewModel, nameof(_viewModel.CommandSelectImage));
+
+            _viewModel.SaveOkEvent += _viewModel_SaveOkEvent;
+            _viewModel.EventCancel += _viewModel_CancelEvent;
+            _viewModel.EventSelectImage += _viewModel_EventSelectImage;
+        }
+
+        private void _viewModel_SaveOkEvent(string sucessfulMsg)
+        {
+            var toast = Toast.MakeText(this, sucessfulMsg, ToastLength.Short);
+            toast.SetGravity(GravityFlags.Top | GravityFlags.CenterHorizontal, 0, 0);
+            toast.Show();
+
+            SetResult(Result.Ok);
+            Finish();
+        }
+
+        private void _viewModel_CancelEvent()
+        {
+            Finish();
+        }
+
+        private void _viewModel_EventSelectImage()
+        {
+            string[] options = { "Take a photo", "Choose from Galery" };
+            var builder = new AndroidX.AppCompat.App.AlertDialog.Builder(this);
+            builder.SetTitle("Select option");
+            builder.SetItems(
+                options,
+                (dialog, which) =>
+                {
+                    switch (which.Which)
+                    {
+                        case 0:
+                            GoToCamera();
+                            break;
+                        case 1:
+                            GoToGallery();
+                            break;
+                    }
+                }
+            );
+            builder.Show();
         }
     }
 }
