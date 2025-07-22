@@ -93,7 +93,7 @@ namespace crud_mvvm_xamarin_android.Backend.ViewModels
 
         private void Save()
         {
-            Category category = _categoryService.GetCategories().ToList()[SelectedCategoryIndex];
+            Category category = _categoryService.GetCategories().OrderBy(c => c.Name).ToList()[SelectedCategoryIndex];
             _article.Category = category;
             _article.CategoryId = category.Id;
             _articleService.AddArticle(_article);
