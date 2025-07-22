@@ -61,6 +61,12 @@
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Services\ArticleService.cs" />
     <Compile Include="Services\CategoryService.cs" />
+    <Compile Include="ViewModels\ArticlesViewModel.cs" />
+    <Compile Include="ViewModels\BaseViewModel.cs" />
+    <Compile Include="ViewModels\CategoriesViewModel.cs" />
+    <Compile Include="ViewModels\CreateArticleViewModel.cs" />
+    <Compile Include="ViewModels\CreateCategoryViewModel.cs" />
+    <Compile Include="ViewModels\EditArticleViewModel.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="Resources\AboutResources.txt" />

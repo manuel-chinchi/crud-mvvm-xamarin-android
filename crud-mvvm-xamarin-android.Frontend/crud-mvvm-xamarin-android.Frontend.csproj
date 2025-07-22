@@ -67,6 +67,7 @@
     <Reference Include="System.Numerics.Vectors" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Activities\Contracts\IBaseActivity.cs" />
     <Compile Include="Adapters\ArticleAdapter.cs" />
     <Compile Include="Adapters\CategoryAdapter.cs" />
     <Compile Include="Activities\ArticlesActivity.cs" />
