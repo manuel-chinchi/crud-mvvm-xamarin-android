@@ -20,6 +20,7 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
     [Activity(Label = "")]
     public class EditArticleActivity : AppCompatActivity
     {
+        /// NOTA esta clase utiliza el mismo activity que CreateArticleActivity
         EditText inpNameArticle;
         EditText inpDetailsArticle;
         Spinner spnCategories;
@@ -50,13 +51,13 @@ namespace crud_mvvm_xamarin_android.Frontend.Activities
             SupportActionBar.SetDisplayHomeAsUpEnabled(true);
             SupportActionBar.SetHomeButtonEnabled(true);
 
-            inpNameArticle = FindViewById<EditText>(Resource.Id.inpNameArticle);
-            inpDetailsArticle = FindViewById<EditText>(Resource.Id.inpDetailsArticle);
-            spnCategories = FindViewById<Spinner>(Resource.Id.spnCategories);
-            imgArticle = FindViewById<ImageView>(Resource.Id.imgArticle);
-            txtDeleteImage = FindViewById<TextView>(Resource.Id.txtDeleteImage);
-            btnAccept = FindViewById<Button>(Resource.Id.btnAceptar);
-            btnCancel = FindViewById<Button>(Resource.Id.btnCancelar);
+            inpNameArticle = FindViewById<EditText>(Resource.Id.etName_CreateArticle);
+            inpDetailsArticle = FindViewById<EditText>(Resource.Id.etDetails_CreateArticle);
+            spnCategories = FindViewById<Spinner>(Resource.Id.spnCategory_CreateArticle);
+            imgArticle = FindViewById<ImageView>(Resource.Id.imgImage_CreateArticle);
+            txtDeleteImage = FindViewById<TextView>(Resource.Id.txtDeleteImage_CreateArticle);
+            btnAccept = FindViewById<Button>(Resource.Id.btnAccept_CreateArticle);
+            btnCancel = FindViewById<Button>(Resource.Id.btnCancel_CreateArticle);
 
             int articleId = Intent.GetIntExtra("ArticleId", -1);
             int categoryId = Intent.GetIntExtra("CategoryId", -1);
