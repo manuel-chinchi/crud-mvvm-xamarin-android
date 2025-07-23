@@ -122,3 +122,4 @@ Android 11 o superior
 * [binding en Xamarin.Android (2)](https://stackoverflow.com/questions/75456495/how-to-build-binding-class-in-xamarin-android)
 * [binding en Xamarin](https://stackoverflow.com/questions/62146033/xamarin-binding-class-property)
 * [ObservableCollection use in c#](https://stackoverflow.com/questions/4279185/what-is-the-use-of-observablecollection-in-net) 
+* [tabla con ancho 100% Readme](https://gist.github.com/panoply/176101828af8393adc821e49578ac588)

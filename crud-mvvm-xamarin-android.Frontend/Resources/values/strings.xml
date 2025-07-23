@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">crud_xamarin</string>
+    <string name="app_name">crud_mvvm_xamarin_android</string>
     <string name="action_settings">Settings</string>
   <!--activity_main.xml-->
     <string name="title_main">Menu</string>
